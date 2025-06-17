@@ -30,13 +30,13 @@ main
         LDR     R0, =W
         LDR     R3, [R0]        ; R3 = R
 
-        LSR     R4, R1, #4      ; Shift right by 4
+        LSR     R4, R1, #9      ; Shift right by 4
         AND     R4, R4, #0x3F   ; Mask 6 bits
 
-        LSR     R5, R2, #5      ; Shift right by 5
+        LSR     R5, R2, #1      ; Shift right by 5
         AND     R5, R5, #0x3F   ; Mask 6 bits
 
-        LSR     R6, R3, #3      ; Shift right by 3
+        LSR     R6, R3, #5      ; Shift right by 3
         AND     R6, R6, #0x3F   ; Mask 6 bits
 
         ADD     R7, R4, R5      ;P+Q

@@ -1,0 +1,23 @@
+[package]
+name = "traffic-light"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cortex-m = "0.7"
+cortex-m-rt = "0.7"
+panic-halt = "0.2"
+stm32f1xx-hal = { version = "0.10.0", features = ["stm32f103", "rt"] }
+
+[profile.release]
+codegen-units = 1
+lto = true
+debug = true
+
+# Specify the target architecture
+[build]
+target = "thumbv7m-none-eabi"
+
+# Unstable settings (to allow for no_std usage)
+[unstable]
+build-std = ["core"]

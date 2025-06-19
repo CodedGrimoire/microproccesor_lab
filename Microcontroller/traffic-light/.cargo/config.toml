@@ -1,0 +1,8 @@
+[build]
+target = "thumbv7m-none-eabi"
+
+[target.thumbv7m-none-eabi]
+runner = "probe-rs run"
+
+[unstable]
+build-std = ["core"]

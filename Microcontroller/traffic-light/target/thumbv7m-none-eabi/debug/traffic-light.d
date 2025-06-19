@@ -1,0 +1,1 @@
+/Users/tazkia/Documents/GitHub/microproccesor_lab/Microcontroller/traffic-light/target/thumbv7m-none-eabi/debug/traffic-light: /Users/tazkia/Documents/GitHub/microproccesor_lab/Microcontroller/traffic-light/src/main.rs

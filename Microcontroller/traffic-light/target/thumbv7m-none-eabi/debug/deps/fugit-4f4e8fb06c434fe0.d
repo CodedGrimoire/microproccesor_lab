@@ -1,0 +1,10 @@
+/Users/tazkia/Documents/GitHub/microproccesor_lab/Microcontroller/traffic-light/target/thumbv7m-none-eabi/debug/deps/libfugit-4f4e8fb06c434fe0.rmeta: /Users/tazkia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/fugit-0.3.7/src/lib.rs /Users/tazkia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/fugit-0.3.7/src/aliases.rs /Users/tazkia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/fugit-0.3.7/src/duration.rs /Users/tazkia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/fugit-0.3.7/src/helpers.rs /Users/tazkia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/fugit-0.3.7/src/instant.rs /Users/tazkia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/fugit-0.3.7/src/rate.rs
+
+/Users/tazkia/Documents/GitHub/microproccesor_lab/Microcontroller/traffic-light/target/thumbv7m-none-eabi/debug/deps/fugit-4f4e8fb06c434fe0.d: /Users/tazkia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/fugit-0.3.7/src/lib.rs /Users/tazkia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/fugit-0.3.7/src/aliases.rs /Users/tazkia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/fugit-0.3.7/src/duration.rs /Users/tazkia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/fugit-0.3.7/src/helpers.rs /Users/tazkia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/fugit-0.3.7/src/instant.rs /Users/tazkia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/fugit-0.3.7/src/rate.rs
+
+/Users/tazkia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/fugit-0.3.7/src/lib.rs:
+/Users/tazkia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/fugit-0.3.7/src/aliases.rs:
+/Users/tazkia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/fugit-0.3.7/src/duration.rs:
+/Users/tazkia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/fugit-0.3.7/src/helpers.rs:
+/Users/tazkia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/fugit-0.3.7/src/instant.rs:
+/Users/tazkia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/fugit-0.3.7/src/rate.rs:

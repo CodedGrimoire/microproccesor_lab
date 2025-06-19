@@ -1,0 +1,3 @@
+cargo:rustc-link-search=/Users/tazkia/Documents/GitHub/microproccesor_lab/Microcontroller/traffic-light/target/thumbv7m-none-eabi/debug/build/stm32f1-20e6d0dd2712c01c/out
+cargo:rerun-if-changed=src/stm32f103/device.x
+cargo:rerun-if-changed=build.rs

@@ -1,0 +1,30 @@
+[package]
+name = "lol"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+cortex-m = "0.7.7"
+cortex-m-rt   = { version = "0.7.3", features = ["device"] }  
+heapless = "0.8.0"
+panic-halt = "0.2.0"
+
+[dependencies.stm32f4]
+version = "0.15"
+features = ["stm32f446", "rt"]
+
+[profile.release]
+opt-level = 'z'     # Optimize for size
+lto = true          # Enable link-time optimization
+codegen-units = 1   # Better optimization, but slower build
+debug = true        # Symbols are nice for debugging
+
+[profile.dev]
+opt-level = 1       # Minimal optimization for debugging
+
+[[bin]]
+name = "stm32f446_led"
+path = "src/main.rs"
+test = false
+bench = false
+

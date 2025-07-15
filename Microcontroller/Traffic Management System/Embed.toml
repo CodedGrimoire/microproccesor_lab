@@ -1,0 +1,2 @@
+[reset]
+halt_afterwards = true   # halt core

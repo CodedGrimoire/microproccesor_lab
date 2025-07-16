@@ -1,3 +1,0 @@
-cargo:rustc-link-search=/Users/asif/Desktop/Microcontroller-Lab-main/Traffic Management System/target/thumbv7em-none-eabihf/debug/build/stm32f4-28e94e55b39d1dbd/out
-cargo:rerun-if-changed=src/stm32f446/device.x
-cargo:rerun-if-changed=build.rs

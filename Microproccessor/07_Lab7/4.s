@@ -22,3 +22,4 @@ BCD_binary
         MOV     PC, LR              ; Return from BCD_binary function
 
         END
+ 

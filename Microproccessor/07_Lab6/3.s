@@ -2,7 +2,7 @@
 Array   DCD     10, 20, 30, 40, 50
 
         AREA |.data|, DATA, READWRITE
-Rev     DCD     0, 0, 0, 0, 0s
+Rev     DCD     0, 0, 0, 0, 0
 
         AREA |.text|, CODE, READONLY
         ENTRY
@@ -10,7 +10,7 @@ Rev     DCD     0, 0, 0, 0, 0s
 
 main
         LDR     R0, =Array       ; Base of Array
-        ADR     R1, Rev         s
+        ADR     R1, Rev         
         MOV     R2, #0          ; Index for Array
 
 loop

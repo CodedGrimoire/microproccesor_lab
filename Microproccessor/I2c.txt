@@ -1,0 +1,163 @@
+# Dual Address Configuration and Packet Structure
+
+---
+
+## 🧠 Concept 1: Dual Addressing in I²C
+
+In some applications, a slave device can respond to:
+- Its own unique address (e.g., 0x01 to 0x1F for 31 slaves)
+- A broadcast address (0xFF) — all slaves can respond to this
+
+This is done using:
+- **OAR1 (Own Address Register 1):** Primary address
+- **OAR2 (Own Address Register 2):** Secondary address + Enable bit
+
+---
+
+### 🔧 STM32 I²C Address Registers Format
+
+| Register | Bits Used | Purpose |
+|----------|-----------|---------|
+| **OAR1** | Bit 15 = ADDMODE (1 for 10-bit, 0 for 7-bit)<br>Bits 10:1 = Address<br>Bit 0 = ADD0 (ignored if ADDMODE = 0) | Stores primary address |
+| **OAR2** | Bit 0 = EN_DUAL<br>Bits 7:1 = Second address | Stores secondary (dual) address |
+
+---
+
+## 🧪 How to Configure One Slave with Two Addresses
+
+Assume slave device gets:
+- Unique address = `0x0B` (example from 1–31)
+- Broadcast address = `0xFF`
+
+**Set OAR1 (for 0x0B):**
+- 7-bit mode → ADDMODE = 0
+- Address 0x0B = `0001011`
+- OAR1 = `(0 << 15) | (0x0B << 1) = 0x0016`
+
+**Set OAR2 (for 0xFF):**
+- EN_DUAL = 1
+- Address = 0xFF
+- OAR2 = `(1 << 0) | (0xFF << 1) = 0x01FE`
+
+---
+
+## 🧠 Concept 2: Packet Structure (Write 0x4C to register 0xD5)
+
+This is a random register write operation.  
+**Master sends:**
+1. START
+2. Slave address + Write (`0x0B` → `0x16`)
+3. Memory address (`0xD5`)
+4. Data (`0x4C`)
+5. STOP
+
+**Packet Structure:**
+```
+START →
+  0x16 (Slave address + write) →
+  0xD5 (Register address) →
+  0x4C (Data) →
+STOP
+```
+
+---
+
+## ✅ Final Answer for 7(a):
+
+**Address Configuration:**
+- OAR1 = `0x0016` (for 0x0B)
+- OAR2 = `0x01FE` (for 0xFF broadcast)
+
+**Packet Structure for Write to Register 0xD5:**  
+See above.
+
+---
+
+## ✅ Question 7(b): START/STOP Count & Signal Differentiation
+
+### 🧠 Concept 1: Differentiating START, STOP, and DATA
+
+| Signal | How It's Recognized |
+|--------|---------------------|
+| START  | SDA goes LOW while SCL is HIGH |
+| STOP   | SDA goes HIGH while SCL is HIGH |
+| DATA   | Changes on SDA while SCL is LOW (latched on rising edge of SCL) |
+
+> The level transitions on SDA while SCL is HIGH uniquely identify START and STOP conditions.
+
+---
+
+### 🧠 Concept 2: Read from Multiple Registers (0xC0, 0xD0, 0xA1)
+
+To read from specific memory addresses, each register read typically involves:
+1. START
+2. Write slave address
+3. Send register address
+4. RESTART
+5. Read from slave
+6. STOP
+
+So each random register read requires:
+- 2 STARTs (one for write phase, one for read phase)
+- 1 STOP
+
+**For 3 Registers:**
+
+| For Each Read | Signal Count |
+|---------------|-------------|
+| START (write phase) | 1 |
+| RESTART (read phase) | 1 |
+| STOP | 1 |
+
+- Total per register: 2 STARTs + 1 STOP
+- For 3 registers: **6 STARTs, 3 STOPs**
+
+---
+
+## ✅ Final Answer for 7(b):
+
+- **Minimum START signals:** 6
+- **Minimum STOP signals:** 3
+
+---
+
+## ✅ Question 7(c): Clock Stretching, Reset, and ACK Role
+
+### 🧠 Clock Stretching
+
+Sometimes the slave needs more time to prepare data or process requests.  
+To pause the master, it pulls the SCL line LOW, which prevents new bits from being sent.
+
+| Who Stretches Clock? | When |
+|----------------------|------|
+| Slave | If internal operation is not ready (e.g., ADC still converting) |
+| Master | Very rare, only in multi-master arbitration scenarios |
+
+---
+
+### ⚠️ If Communication is Disrupted
+
+When an I²C bus gets stuck (e.g., SDA held low), the master must reset the bus:
+
+**Steps to Recover I²C:**
+1. Manually toggle SCL line (9 clock pulses)
+2. Generate a STOP condition: While SCL is high, release SDA from LOW to HIGH
+3. Reinitialize the I²C peripheral
+4. Check bus idle state before restarting
+
+---
+
+### 🧠 Role of Acknowledgement (ACK/NACK)
+
+After every byte transmitted:
+- Receiver sends **ACK** (pulls SDA LOW) to say:  
+  “Yes, I got the byte.”
+- **NACK** means:  
+  “Stop. I didn’t receive or don’t want more.”
+
+**Why ACK/NACK is Vital:**
+- Confirms reliable data delivery
+- Allows master to stop reading at the right moment (by sending NACK)
+- Helps identify communication errors
+
+> 📌 Without ACK/NACK, the master wouldn’t know whether to continue or retry — it’s crucial for synchronization!

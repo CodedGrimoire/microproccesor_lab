@@ -1,0 +1,72 @@
+#define TX_PIN 6
+#define RX_PIN 7
+
+void USART6_Init(void) {
+    // 1. Enable GPIOC and USART6 peripheral clocks
+    // RCC->AHB1ENR: Bit 2 enables GPIOC clock
+    RCC->AHB1ENR |= (1 << 2);     // Enable clock for GPIOC
+    // RCC->APB2ENR: Bit 5 enables USART6 clock
+    RCC->APB2ENR |= (1 << 5);     // Enable clock for USART6
+
+    // 2. Configure PC6 and PC7 as Alternate Function mode (10)
+    // Clear mode bits for PC6 and PC7, then set to '10' (AF)
+    GPIOC->MODER &= ~((3 << (TX_PIN * 2)) | (3 << (RX_PIN * 2))); // Clear
+    GPIOC->MODER |=  ((2 << (TX_PIN * 2)) | (2 << (RX_PIN * 2))); // Set AF mode
+
+    // 3. Select Alternate Function 8 (USART6) for PC6 and PC7 in AFRL
+    // Clear AF bits for PC6 and PC7, then set to AF8 (USART6)
+    GPIOC->AFR[0] &= ~((0xF << (TX_PIN * 4)) | (0xF << (RX_PIN * 4))); // Clear
+    GPIOC->AFR[0] |=  ((8 << (TX_PIN * 4)) | (8 << (RX_PIN * 4)));     // Set AF8
+
+    // 4. Set baud rate for USART6
+    // For 5 Mbps, BRR = 0x100 (assuming suitable peripheral clock)
+    USART6->BRR = 0x100;
+
+    // 5. Enable USART6 transmitter and receiver
+    // CR1: Bit 2 = RE (Receiver enable), Bit 3 = TE (Transmitter enable)
+    USART6->CR1 |= (1 << 2) | (1 << 3);
+
+    // 6. Enable USART6 peripheral
+    // CR1: Bit 13 = UE (USART enable)
+    USART6->CR1 |= (1 << 13);
+}
+
+// Send a single byte over USART6
+void USART6_SendByte(uint8_t data) {
+    // Wait until transmit data register is empty (TXE flag, SR bit 7)
+    while (!(USART6->SR & (1 << 7)));
+    // Write data to data register to send
+    USART6->DR = data;
+}
+
+// Receive a single byte from USART6
+uint8_t USART6_ReceiveByte(void) {
+    // Wait until receive data register is not empty (RXNE flag, SR bit 5)
+    while (!(USART6->SR & (1 << 5)));
+    // Read received data from data register
+    return USART6->DR;
+}
+
+// Example communication routine with a jet engine controller
+void CommunicateWithJetEngine(void) {
+    // Send trigger byte (0x5C) to start data transmission from the engine
+    USART6_SendByte(0x5C);
+
+    // Receive 3072 bytes from the jet engine (e.g., sensor data)
+    for (int i = 0; i < 3072; i++) {
+        uint8_t byte = USART6_ReceiveByte();
+        // Store in buffer or process as needed (not shown here)
+    }
+}
+
+/*
+UART Configuration Steps (STM32 – Bare Metal)
+---------------------------------------------
+1. Enable GPIO clocks (for TX/RX pins as alternate function)
+2. Enable USART clock in RCC
+3. Configure GPIO pins (set to AF mode, push-pull, set speed)
+4. Set baud rate in USART_BRR
+5. Enable TX and RX in USART_CR1
+6. Enable USART (USART_CR1 |= UE)
+7. (Optional) Enable interrupts for RX/TX
+*/

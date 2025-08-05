@@ -1,0 +1,113 @@
+# 1. What is UART?
+
+**UART** stands for **Universal Asynchronous Receiver Transmitter**.
+
+It is a serial communication protocol used to transmit and receive data one bit at a time — typically over two wires:
+
+| Line | Function                                      |
+|------|-----------------------------------------------|
+| TX   | Sends data from MCU to external device        |
+| RX   | Receives data into MCU from external device   |
+
+**UART** is called *asynchronous* because it does not require a shared clock signal between the transmitting and receiving devices to coordinate the timing of data bits.
+
+---
+*Baud rate is the speed of data transmission, measured in bits per second (bps).
+In UART/USART, this means how many bits are sent or received each second over the serial line.
+
+
+
+## Why is it called asynchronous?
+
+- **Synchronous communication:** Both devices share a common clock. Data is sent in sync with this clock, making it easy to know when to read each bit.
+- **Asynchronous communication (like UART):**
+  - No shared clock is used.
+  - Both sender and receiver agree on a common baud rate (bits per second).
+  - Every data transmission includes:
+    - A **start bit** (indicates when data begins)
+    - The **data bits**
+    - An **optional parity bit**
+    - One or more **stop bits** (indicates when data ends)
+  - These bits help the receiver know when to sample each bit.
+
+| Start | Data Bits | Parity | Stop  |
+|-------|-----------|--------|-------|
+| 0     | 5–9 bits  | 0/1 bit| 1     |
+
+---
+
+## Status Flags (USART_SR)
+
+| Flag | Meaning                                 |
+|------|-----------------------------------------|
+| TXE  | Transmit Data Register Empty (ready to send next byte) |
+| RXNE | Receive Data Register Not Empty (data received)        |
+| ORE  | Overrun Error                           |
+| TC   | Transmission Complete                   |
+| PE   | Parity Error                            |
+
+---
+
+# 2. USART in STM32: Registers
+
+UART on STM32 is often implemented via the **USART** module (which supports both sync and async).
+
+| Register    | Purpose                                 |
+|-------------|-----------------------------------------|
+| USART_SR    | Status (TXE, RXNE, ORE, etc.)           |
+| USART_DR    | Data register (read/write here)          |
+| USART_BRR   | Baud rate config                        |
+| USART_CR1   | Enable TX, RX, interrupts               |
+| USART_CR2/3 | Stop bits, flow control, etc.           |
+
+---
+
+# 3. Important Features of UART/USART in Microcontrollers
+
+### 🔷 1. Asynchronous Serial Communication
+- UART operates without a shared clock line, making it ideal for simple two-wire communication (TX/RX).
+- Both devices must agree on a baud rate, such as 9600 or 115200 bps.
+
+### 🔷 2. Full Duplex Communication
+- Most UART/USART modules are full duplex, meaning simultaneous transmit and receive over separate lines.
+
+### 🔷 3. Configurable Frame Format
+- You can configure:
+  - **Word Length:** 8 or 9 bits
+  - **Parity:** None, Even, or Odd
+  - **Stop Bits:** 1 or 2
+- **Example:** Standard "8N1" = 8 data bits, No parity, 1 stop bit
+
+### 🔷 4. Baud Rate Control
+- The baud rate can be adjusted using the `USART_BRR` register, which depends on:
+  - Peripheral clock frequency
+  - Desired baud rate
+
+  ```
+  BRR = Peripheral Clock / Baud Rate
+  ```
+
+### 🔷 5. Status Flags for Communication
+- The `USART_SR` register contains:
+  - **TXE:** Transmit buffer empty
+  - **RXNE:** Receive data available
+  - **TC:** Transmission complete
+  - **ORE:** Overrun error
+  - **PE:** Parity error
+- These flags help monitor UART behavior and detect errors.
+
+### 🔷 6. Interrupt Support
+- USART supports interrupts for:
+  - Data received (`RXNEIE`)
+  - Data register empty (`TXEIE`)
+  - Errors
+- This allows efficient non-blocking communication.
+
+### 🔷 7. DMA Support
+- In STM32 and similar MCUs, USART can work with DMA (Direct Memory Access) for high-speed or bulk data transfer without CPU overhead.
+
+### 🔷 8. Low Power Modes Compatible
+- USART can wake the MCU from sleep modes when data is received — useful in battery-powered systems.
+
+### 🔷 9. Multiprocessor Mode (Advanced)
+- Some USARTs support addressing modes to work in networks of multiple devices — e.g., RS-485.
